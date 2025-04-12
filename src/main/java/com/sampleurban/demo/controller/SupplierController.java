@@ -34,16 +34,17 @@ public class SupplierController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginSupplier(@RequestParam String email, @RequestParam String password) {
-        boolean isAuthenticated = supplierService.loginSupplier(email, password);
+        String supplierId = supplierService.loginSupplier(email, password);
 
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful.");
+        if (supplierId != null) {
+            return ResponseEntity.ok(supplierId); // send supplier ID to frontend
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login Failed");
         }
     }
 
-//    Update - Working
+
+    //    Update - Working
     @PutMapping("/update")
     public ResponseEntity<String> updateSupplier(@RequestBody SupplierRequest supplierRequest) {
         try {
