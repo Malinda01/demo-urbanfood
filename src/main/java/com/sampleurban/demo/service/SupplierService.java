@@ -1,5 +1,6 @@
 package com.sampleurban.demo.service;
 
+//import com.sampleurban.demo.repository.SupplierRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.function.Supplier;
 
 @Service
 public class SupplierService {
