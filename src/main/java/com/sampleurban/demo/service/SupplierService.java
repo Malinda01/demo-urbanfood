@@ -1,5 +1,6 @@
 package com.sampleurban.demo.service;
 
+//import com.sampleurban.demo.repository.SupplierRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.function.Supplier;
 
 @Service
 public class SupplierService {
@@ -30,19 +32,18 @@ public class SupplierService {
     }
 
 //    Login - In Progress
-    @Transactional
-    public boolean loginSupplier(String email, String password) {
-        Query query = entityManager.createNativeQuery("SELECT login_supp(?, ?) FROM dual");
-        query.setParameter(1, email);
-        query.setParameter(2, password);
+@Transactional
+public String loginSupplier(String email, String password) {
+    Query query = entityManager.createNativeQuery("SELECT login_supp(?, ?) FROM dual");
+    query.setParameter(1, email);
+    query.setParameter(2, password);
 
-        Object result = query.getSingleResult();
+    Object result = query.getSingleResult();
+    return result != null ? result.toString() : null;
+}
 
-        // Convert the result to boolean (Oracle returns 1 for TRUE, 0 for FALSE)
-        return result != null && (result.equals(BigDecimal.ONE) || result.equals(1));
-    }
 
-//    Update - Completed
+    //    Update - Completed
     @Transactional
     public void updateSupplier(String supplierId, String supplierName, String email, String phoneNumber,
                                String address, String pass, String supplierType) {
