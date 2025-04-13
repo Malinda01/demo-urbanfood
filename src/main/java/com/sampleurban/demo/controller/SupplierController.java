@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @RestController
@@ -44,6 +46,19 @@ public class SupplierController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login Failed");
         }
     }
+
+    //Populate profile
+    @GetMapping("/details/{supplierId}")
+    public ResponseEntity<Map<String, Object>> getSupplierDetails(@PathVariable String supplierId) {
+        try {
+            Map<String, Object> supplierDetails = supplierService.getSupplierDetails(supplierId);
+            return ResponseEntity.ok(supplierDetails);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Error fetching supplier details: " + e.getMessage()));
+        }
+    }
+
 
     //    Update - Working
     @PutMapping("/update")
