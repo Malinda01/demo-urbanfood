@@ -18,25 +18,29 @@ public class ProductController {
     @PostMapping("/add")
     public String addProduct(@RequestBody ProductRequest product) {
         productService.addProduct(
-                product.getProductId(),
-                product.getProductName(),
+                product.getname(), // Removed productId since it will be auto-generated
+                product.getPrice(),
+                product.getQuantity(),
                 product.getCategory(),
-                product.getType(),
                 product.getDescription(),
-                product.getImageUrl()
+                product.getImageUrl(),
+                product.getSupplierId()
         );
         return "Product added successfully";
     }
+
 
     @PutMapping("/update")
     public String updateProduct(@RequestBody ProductRequest product) {
         productService.updateProduct(
                 product.getProductId(),
-                product.getProductName(),
+                product.getname(),
+                product.getPrice(),
+                product.getQuantity(),
                 product.getCategory(),
-                product.getType(),
                 product.getDescription(),
-                product.getImageUrl()
+                product.getImageUrl(),
+                product.getSupplierId()
         );
         return "Product updated successfully";
     }
@@ -47,8 +51,9 @@ public class ProductController {
         return "Product deleted successfully";
     }
 
-    @GetMapping("/all")
-    public List<ProductRequest> getAllProducts() {
-        return productService.getAllProducts();
+    @GetMapping("/by-supplier/{supplierId}")
+    public List<ProductRequest> getProductsBySupplier(@PathVariable String supplierId) {
+        return productService.getProductsBySupplier(supplierId);
     }
+
 }

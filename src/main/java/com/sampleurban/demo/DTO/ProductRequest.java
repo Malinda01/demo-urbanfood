@@ -2,11 +2,13 @@ package com.sampleurban.demo.DTO;
 
 public class ProductRequest {
     private String productId;
-    private String productName;
+    private String name;
+    private double price;
+    private int quantity;
     private String category;
-    private String type;
     private String description;
     private String imageUrl;
+    private String supplierId;
 
     // Getters and Setters
     public String getProductId() {
@@ -17,12 +19,28 @@ public class ProductRequest {
         this.productId = productId;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getname() {
+        return name;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setname(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getCategory() {
@@ -31,14 +49,6 @@ public class ProductRequest {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getDescription() {
@@ -56,5 +66,12 @@ public class ProductRequest {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-}
 
+    public String getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(String supplierId) {
+        this.supplierId = supplierId;
+    }
+}
