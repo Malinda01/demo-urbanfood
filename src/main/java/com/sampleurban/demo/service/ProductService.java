@@ -33,19 +33,30 @@ public class ProductService {
 
 
     @Transactional
-    public void updateProduct(String id, String name, double price, int quantity, String category,
-                              String description, String imageUrl, String supplierId) {
-        var query = entityManager.createNativeQuery("{ call update_product(?, ?, ?, ?, ?, ?, ?, ?) }");
-        query.setParameter(1, id);
-        query.setParameter(2, name);
-        query.setParameter(3, price);
-        query.setParameter(4, quantity);
-        query.setParameter(5, category);
-        query.setParameter(6, description);
-        query.setParameter(7, imageUrl);
-        query.setParameter(8, supplierId);
-        query.executeUpdate();
+    public void updateProductUsingProcedure(String productId, String supplierId, ProductRequest request) {
+        StoredProcedureQuery query = entityManager
+                .createStoredProcedureQuery("update_product")
+                .registerStoredProcedureParameter("p_product_id", String.class, ParameterMode.IN)
+                .registerStoredProcedureParameter("p_product_name", String.class, ParameterMode.IN)
+                .registerStoredProcedureParameter("p_price", Double.class, ParameterMode.IN)
+                .registerStoredProcedureParameter("p_quantity", Integer.class, ParameterMode.IN)
+                .registerStoredProcedureParameter("p_category", String.class, ParameterMode.IN)
+                .registerStoredProcedureParameter("p_description", String.class, ParameterMode.IN)
+                .registerStoredProcedureParameter("p_image_url", String.class, ParameterMode.IN)
+                .registerStoredProcedureParameter("p_supplier_id", String.class, ParameterMode.IN)
+                .setParameter("p_product_id", productId)
+                .setParameter("p_product_name", request.getname())
+                .setParameter("p_price", request.getPrice())
+                .setParameter("p_quantity", request.getQuantity())
+                .setParameter("p_category", request.getCategory())
+                .setParameter("p_description", request.getDescription())
+                .setParameter("p_image_url", request.getImageUrl())
+                .setParameter("p_supplier_id", supplierId);
+
+        query.execute();
     }
+
+
 
     @Transactional
     public void deleteProduct(String id) {

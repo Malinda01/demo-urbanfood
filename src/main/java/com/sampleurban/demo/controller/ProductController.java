@@ -3,6 +3,8 @@ package com.sampleurban.demo.controller;
 import com.sampleurban.demo.DTO.ProductRequest;
 import com.sampleurban.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,20 +32,21 @@ public class ProductController {
     }
 
 
-    @PutMapping("/update")
-    public String updateProduct(@RequestBody ProductRequest product) {
-        productService.updateProduct(
-                product.getProductId(),
-                product.getname(),
-                product.getPrice(),
-                product.getQuantity(),
-                product.getCategory(),
-                product.getDescription(),
-                product.getImageUrl(),
-                product.getSupplierId()
-        );
-        return "Product updated successfully";
+    @PutMapping("/{productId}/{supplierId}")
+    public ResponseEntity<String> updateProduct(
+            @PathVariable String productId,
+            @PathVariable String supplierId,
+            @RequestBody ProductRequest productRequest) {
+        try {
+            productService.updateProductUsingProcedure(productId, supplierId, productRequest);
+            return ResponseEntity.ok("Product updated successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update product");
+        }
     }
+
+
 
     @DeleteMapping("/delete/{id}")
     public String deleteProduct(@PathVariable String id) {
