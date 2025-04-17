@@ -31,6 +31,37 @@ public class ProductService {
         query.executeUpdate();
     }
 
+//    Populate the Product update form
+@Transactional
+public ProductRequest getProductById(String productId) {
+    StoredProcedureQuery query = entityManager
+            .createStoredProcedureQuery("get_product_by_id")
+            .registerStoredProcedureParameter("p_product_id", String.class, ParameterMode.IN)
+            .registerStoredProcedureParameter("p_name", String.class, ParameterMode.OUT)
+            .registerStoredProcedureParameter("p_price", Double.class, ParameterMode.OUT)
+            .registerStoredProcedureParameter("p_quantity", Integer.class, ParameterMode.OUT)
+            .registerStoredProcedureParameter("p_category", String.class, ParameterMode.OUT)
+            .registerStoredProcedureParameter("p_description", String.class, ParameterMode.OUT)
+            .registerStoredProcedureParameter("p_img_url", String.class, ParameterMode.OUT)
+            .registerStoredProcedureParameter("p_supplier_id", String.class, ParameterMode.OUT)
+            .setParameter("p_product_id", productId);
+
+    query.execute();
+
+    ProductRequest product = new ProductRequest();
+    product.setProductId(productId);
+    product.setname((String) query.getOutputParameterValue("p_name"));
+    product.setPrice((Double) query.getOutputParameterValue("p_price"));
+    product.setQuantity((Integer) query.getOutputParameterValue("p_quantity"));
+    product.setCategory((String) query.getOutputParameterValue("p_category"));
+    product.setDescription((String) query.getOutputParameterValue("p_description"));
+    product.setImageUrl((String) query.getOutputParameterValue("p_img_url"));
+    product.setSupplierId((String) query.getOutputParameterValue("p_supplier_id"));
+
+    return product;
+}
+
+
 
     @Transactional
     public void updateProductUsingProcedure(String productId, String supplierId, ProductRequest request) {
