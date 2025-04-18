@@ -17,6 +17,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    // Add product
     @PostMapping("/add")
     public String addProduct(@RequestBody ProductRequest product) {
         productService.addProduct(
@@ -31,7 +32,19 @@ public class ProductController {
         return "Product added successfully";
     }
 
+    // Populate the update product
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductRequest> getProductById(@PathVariable String productId) {
+        try {
+            ProductRequest product = productService.getProductById(productId);
+            return ResponseEntity.ok(product);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
+
+    // Update product
     @PutMapping("/{productId}/{supplierId}")
     public ResponseEntity<String> updateProduct(
             @PathVariable String productId,
@@ -48,9 +61,9 @@ public class ProductController {
 
 
 
-    @DeleteMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable String id) {
-        productService.deleteProduct(id);
+    @DeleteMapping("/{productId}")
+    public String deleteProduct(@PathVariable String productId) {
+        productService.deleteProduct(productId);
         return "Product deleted successfully";
     }
 
