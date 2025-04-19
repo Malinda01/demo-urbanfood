@@ -72,4 +72,37 @@ public class ProductController {
         return productService.getProductsBySupplier(supplierId);
     }
 
+//    SAles
+@GetMapping("/sales")
+public ResponseEntity<Double> getSupplierSalesInPeriod(
+        @RequestParam String supplierId,
+        @RequestParam String startDate,
+        @RequestParam String endDate) {
+    try {
+        java.sql.Timestamp start = java.sql.Timestamp.valueOf(startDate + " 00:00:00");
+        java.sql.Timestamp end = java.sql.Timestamp.valueOf(endDate + " 23:59:59");
+
+        double totalSales = productService.getSupplierSalesInPeriod(supplierId, start, end);
+        return ResponseEntity.ok(totalSales);
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.badRequest().build(); // Invalid format
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
+//High demand
+@GetMapping("/high-demand/{supplierId}")
+public ResponseEntity<List<ProductRequest>> getHighDemandProducts(@PathVariable String supplierId) {
+    try {
+        List<ProductRequest> highDemandProducts = productService.getHighDemandProducts(supplierId);
+        return ResponseEntity.ok(highDemandProducts);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
+
 }

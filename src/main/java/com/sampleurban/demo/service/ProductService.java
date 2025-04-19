@@ -125,4 +125,54 @@ public ProductRequest getProductById(String productId) {
         return products;
     }
 
+//    Sales
+@Transactional
+public double getSupplierSalesInPeriod(String supplierId, java.sql.Timestamp startDate, java.sql.Timestamp endDate) {
+    StoredProcedureQuery query = entityManager
+            .createStoredProcedureQuery("get_supplier_sales_in_period")
+            .registerStoredProcedureParameter("p_supplier_id", String.class, ParameterMode.IN)
+            .registerStoredProcedureParameter("p_start_date", java.sql.Timestamp.class, ParameterMode.IN)
+            .registerStoredProcedureParameter("p_end_date", java.sql.Timestamp.class, ParameterMode.IN)
+            .registerStoredProcedureParameter("p_total_sales", Double.class, ParameterMode.OUT)
+            .setParameter("p_supplier_id", supplierId)
+            .setParameter("p_start_date", startDate)
+            .setParameter("p_end_date", endDate);
+
+    query.execute();
+    Object result = query.getOutputParameterValue("p_total_sales");
+
+    return result != null ? ((Number) result).doubleValue() : 0.0;
+}
+
+// High demand
+@Transactional
+public List<ProductRequest> getHighDemandProducts(String supplierId) {
+    StoredProcedureQuery query = entityManager
+            .createStoredProcedureQuery("get_high_demand_products")
+            .registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+            .registerStoredProcedureParameter(2, void.class, ParameterMode.REF_CURSOR)
+            .setParameter(1, supplierId);
+
+    query.execute();
+    List<Object[]> results = query.getResultList();
+    List<ProductRequest> products = new ArrayList<>();
+
+    for (Object[] row : results) {
+        // Skip message row if no products sold
+        if (row[0] instanceof String && "No products sold".equals(row[0])) continue;
+
+        ProductRequest product = new ProductRequest();
+        product.setProductId((String) row[0]);
+        product.setname((String) row[1]);
+        product.setQuantity(((Number) row[2]).intValue());  // total_quantity
+        products.add(product);
+    }
+
+    return products;
+}
+
+
+
+
+
 }
